@@ -21,7 +21,7 @@ title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "시리"
 description              : "배운 내용을 내 언어로 정리하기"
-url                      : "https://sihlee.github.io"
+url                      : ""
 baseurl                  : # 서브 경로가 있는 경우 기재
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : "https://avatars.githubusercontent.com/u/66323295?v=4" # path of fallback teaser image, e.g. "/assets/images/500x300.png"
