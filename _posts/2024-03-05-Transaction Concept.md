@@ -1,12 +1,9 @@
 ---
 title: "2-1. Transaction Concept"
-date: 2024-03-5 14:36:00 +0900
+date: 2024-03-05 14:36:00 +0900
+layout: splash
 toc: true
-permalink: /portfolio/
-collection: portfolio
-entries_layout: grid
-category: category
-tag: foo
+classes: wide
 ---
 
 # Transaction Concept
@@ -47,7 +44,7 @@ There are two main issues to address when working with **transactions**:
     - So, a Transaction should have the ACID properties.
     Transaction이 지켜야 하는 4가지 조건
         
-        ## ACID properties
+        ### ACID properties
         
         트랜잭션은 데이터베이스에서 일부 데이터를 읽고(**read**) 쓰는(**write**) 일련의 과정으로 이루어지며, 이러한 작업들은 원자적으로 실행되어야 합니다. 즉, 모든 작업이 성공적으로 완료되거나 실패하는 것을 보장하여 데이터베이스를 일관된 상태로 유지합니다.
         
@@ -79,7 +76,7 @@ There are two main issues to address when working with **transactions**:
         
         ## Transaction State
         
-        ![Untitled](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled.png)
+        ![Untitled](/assets/images/2-1_Transaction_Concept/Untitled.png)
         
         ### Active
         
@@ -160,13 +157,13 @@ concurrent하게 돌아가는 transaction에서 consistency를 만족하기 위�
     스케줄 S'는 뷰 직렬가능 스케줄이라고 한다.
     
 
-![Schedule 8은 V.S하지만 C.S하지 않습니다](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled%201.png)
+![Schedule 8은 V.S하지만 C.S하지 않습니다](/assets/images/2-1_Transaction_Concept/Untitled1.png)
 
 Schedule 8은 V.S하지만 C.S하지 않습니다
 
-![Untitled](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled%202.png)
+![Untitled](/assets/images/2-1_Transaction_Concept/Untitled2.png)
 
-![**Conflict Serializability하지 않고 View Serializability하지 않아도 consistency한 경우도 있습니다.**](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled%203.png)
+![**Conflict Serializability하지 않고 View Serializability하지 않아도 consistency한 경우도 있습니다.**](/assets/images/2-1_Transaction_Concept/Untitled3.png)
 
 **Conflict Serializability하지 않고 View Serializability하지 않아도 consistency한 경우도 있습니다.**
 
@@ -177,17 +174,17 @@ Schedule 8은 V.S하지만 C.S하지 않습니다
 
 말고도 test방법이 있을까?
 
-### Testing for Conflict Serializability
+## Testing for Conflict Serializability
 
-![그래프를 그려보았을 때 사이클이 존재한다면 Not conflict serializable](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled%204.png)
+![그래프를 그려보았을 때 사이클이 존재한다면 Not conflict serializable](/assets/images/2-1_Transaction_Concept/Untitled4.png)
 
 그래프를 그려보았을 때 사이클이 존재한다면 Not conflict serializable
 
-![사이클이 존재하지 않으므로 conflict serializable](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled%205.png)
+![사이클이 존재하지 않으므로 conflict serializable](/assets/images/2-1_Transaction_Concept/Untitled5.png)
 
 사이클이 존재하지 않으므로 conflict serializable
 
-### Test for View Serializability
+## Test for View Serializability
 
 View Serializability 시험은 NP-complete 영역 문제이기에, 다항식 시간(polynomial time) 알고리즘을 구하는 것은 매우 어렵다.
 
@@ -201,7 +198,7 @@ Transaction State 가 commit의 영역까지 왔을 때 고려하는 사항. 이
 
 연쇄 철회를 최소화하기 위해선?
 
-### Cascadeless Schedules (연속적인 철회가 필요 없는 스케줄)
+## Cascadeless Schedules (연속적인 철회가 필요 없는 스케줄)
 
 관련을 안 만들면 된다
 
@@ -209,7 +206,7 @@ Transaction State 가 commit의 영역까지 왔을 때 고려하는 사항. 이
 → commit하는 시점을 앞으로 당긴다 
 → 제한적인(strict) Schedules : 쓰기 연산을 한 트랜잭션이 (완료 또는 철회로) 종료될 때까지 해당 데이터를 다른 트랜잭션이 읽거나 쓸 수 없다. (w-w, w-r 제한걸기)
 
-![Untitled](2-1%20Transaction%20Concept%2043a0f82743be425e803bb2b8b280e73f/Untitled%206.png)
+![Untitled](/assets/images/2-1_Transaction_Concept/Untitled6.png)
 
 RC : recoverable
 ACA : avoids cascading aborts. **w-r만 따짐**
