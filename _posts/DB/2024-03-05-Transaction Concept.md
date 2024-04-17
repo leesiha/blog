@@ -1,7 +1,8 @@
 ---
 title: "2-1. Transaction Concept"
 date: 2024-03-05 14:36:00 +0900
-# layout: splash
+category:
+tags:
 toc: true
 ---
 
