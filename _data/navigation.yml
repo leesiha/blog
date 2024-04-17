@@ -1,16 +1,10 @@
 # main links
 main:
-  - title: "Quick-Start Guide"
-    url: /docs/quick-start-guide/
-  - title: "Posts"
-    url: /year-archive/
-  - title: "Categories"
+  - title: "About me"
+    url: /about/
+  - title: "카테고리"
     url: /categories/
-  - title: "Tags"
+  - title: "#태그"
     url: /tags/
-  - title: "Pages"
-    url: /page-archive/
-  - title: "Collections"
-    url: /collection-archive/
-  - title: "External Link"
-    url: https://google.com
+  # - title: "External Link"
+  #   url: https://google.com
