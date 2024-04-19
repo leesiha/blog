@@ -4,6 +4,7 @@ date: 2024-03-05 14:36:00 +0900
 category:
 tags:
 toc: true
+toc_sticky: true
 ---
 
 # Transaction Concept

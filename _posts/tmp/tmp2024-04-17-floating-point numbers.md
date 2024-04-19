@@ -4,6 +4,8 @@ date: 2024-04-17 16:59
 category: C++
 tags: [floating-point, fixed-point]
 summary: 부동소수점과 고정소수점의 차이점을 알아보자.
+toc: true
+toc_sticky: true
 ---
 
 실수를 표현하는 방법에는 부동소수점(Floating-point)과 고정소수점(Fixed-point)이 있다. 이번 글에서는 부동소수점과 고정소수점의 차이점을 알아보자.
