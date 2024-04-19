@@ -5,6 +5,7 @@ category: C++
 tags: [constructor, destructor, OCCF]
 summary: OCCF는 올바른 클래스 디자인을 위한 지침입니다. 사용자가 직접 정의한 데이터 타입이 기본 객체 사용 환경에서 올바르게 작동하도록 보장하기 위해, 구현해야 하는 4개의 함수를 소개하고 있습니다.
 toc: true
+toc_sticky: true
 ---
 
 ## What is the Orthodox Canonical Class Form?
