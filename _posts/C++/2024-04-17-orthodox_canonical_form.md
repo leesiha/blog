@@ -15,7 +15,8 @@ OCCF는 <span style="background-color:#fff5b1"> 올바른 클래스 디자인을
 - 코드 내에서 객체가 어떻게 활용되는지 깊이있게 이해할 수 있습니다.
 - 고급 C++ idioms 를 이해하기 위한 중요한 기초가 됩니다.
 
-> OCCF를 잘 이해하면, 복잡한 객체 지향 애플리케이션에서도 잘 동작하는 C++ 클래스를 작성하는 데 큰 도움이 됩니다.
+OCCF를 잘 이해하면, 복잡한 객체 지향 애플리케이션에서도 잘 동작하는 C++ 클래스를 작성하는 데 큰 도움이 됩니다.
+{: .notice--info}
 
 ### The Four Required Functions
 *OCCF specifies 4 required functions that should be implemented for complex, user-defined data types.*
