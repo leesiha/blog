@@ -77,7 +77,7 @@ There are two main issues to address when working with **transactions**:
         
         ## Transaction State
         
-        ![Untitled](/assets/images/2-1_Transaction_Concept/Untitled.png)
+        ![Untitled](/assets/images/Untitled.png)
         
         ### Active
         
@@ -158,13 +158,13 @@ concurrent하게 돌아가는 transaction에서 consistency를 만족하기 위�
     스케줄 S'는 뷰 직렬가능 스케줄이라고 한다.
     
 
-![Schedule 8은 V.S하지만 C.S하지 않습니다](/assets/images/2-1_Transaction_Concept/Untitled1.png)
+![Schedule 8은 V.S하지만 C.S하지 않습니다](/assets/images/Untitled1.png)
 
 Schedule 8은 V.S하지만 C.S하지 않습니다
 
-![Untitled](/assets/images/2-1_Transaction_Concept/Untitled2.png)
+![Untitled](/assets/images/Untitled2.png)
 
-![**Conflict Serializability하지 않고 View Serializability하지 않아도 consistency한 경우도 있습니다.**](/assets/images/2-1_Transaction_Concept/Untitled3.png)
+![**Conflict Serializability하지 않고 View Serializability하지 않아도 consistency한 경우도 있습니다.**](/assets/images/Untitled3.png)
 
 **Conflict Serializability하지 않고 View Serializability하지 않아도 consistency한 경우도 있습니다.**
 
@@ -177,11 +177,11 @@ Schedule 8은 V.S하지만 C.S하지 않습니다
 
 ## Testing for Conflict Serializability
 
-![그래프를 그려보았을 때 사이클이 존재한다면 Not conflict serializable](/assets/images/2-1_Transaction_Concept/Untitled4.png)
+![그래프를 그려보았을 때 사이클이 존재한다면 Not conflict serializable](/assets/images/Untitled4.png)
 
 그래프를 그려보았을 때 사이클이 존재한다면 Not conflict serializable
 
-![사이클이 존재하지 않으므로 conflict serializable](/assets/images/2-1_Transaction_Concept/Untitled5.png)
+![사이클이 존재하지 않으므로 conflict serializable](/assets/images/Untitled5.png)
 
 사이클이 존재하지 않으므로 conflict serializable
 
@@ -207,7 +207,7 @@ Transaction State 가 commit의 영역까지 왔을 때 고려하는 사항. 이
 → commit하는 시점을 앞으로 당긴다 
 → 제한적인(strict) Schedules : 쓰기 연산을 한 트랜잭션이 (완료 또는 철회로) 종료될 때까지 해당 데이터를 다른 트랜잭션이 읽거나 쓸 수 없다. (w-w, w-r 제한걸기)
 
-![Untitled](/assets/images/2-1_Transaction_Concept/Untitled6.png)
+![Untitled](/assets/images/Untitled6.png)
 
 RC : recoverable
 ACA : avoids cascading aborts. **w-r만 따짐**
