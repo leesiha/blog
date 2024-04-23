@@ -1,8 +1,9 @@
 ---
 title: "2-1. Transaction Concept"
 date: 2024-03-05 14:36:00 +0900
-category:
-tags:
+category: DB
+tags: [DB, Transaction]
+summary: "Transaction이란 무엇인가? Transaction이 지켜야 하는 4가지(ACID) 조건과 Transaction State에 대해 알아봅니다."
 toc: true
 toc_sticky: true
 ---
