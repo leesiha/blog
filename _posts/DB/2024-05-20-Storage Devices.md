@@ -2,7 +2,7 @@
 title: Storage Devices(1)
 date: 2024-05-20 13:09
 category: DB
-tags: [Physical Storage Media, Magnetic Disks, RAID, File Organization]
+tags: [Physical Storage Media, Magnetic Disks]
 summary: In this section, we will look at computer storage devices. Because database systems store and manage data, knowledge of data storage devices is necessary to understand database systems. We will discuss the characteristics of each storage device, the characteristics of hard disks, the most common medium for storing data, RAID, and the file and record structures and buffers in computer systems. 
 toc: true
 toc_sticky: true
