@@ -115,7 +115,7 @@ RAID 3은 <span style="background-color:#fff5b1">**바이트** 수준 스트라�
 RAID 4는 <span style="background-color:#fff5b1">**블록** 수준 스트라이핑(Block-Level Striping)</span>과 별도의 <span style="background-color:#fff5b1">패리티 디스크</span>를 사용합니다. 데이터가 블록 단위로 여러 디스크에 스트라이핑되며, 패리티 정보는 전용 디스크에 저장됩니다. RAID 4는 RAID 3보다 더 일반적인 I/O 작업에 적합하지만, 패리티 디스크가 병목 현상을 일으킬 수 있다는 단점이 있습니다. 데이터 읽기와 쓰기가 균형 있게 중요한 애플리케이션에서 사용됩니다.
 
 **RAID 5** <br>
-RAID 5는 데이터를 <span style="background-color:#fff5b1">**블록** 수준으로 스트라이핑</span>하고, <span style="background-color:#fff5b1">패리티</span> 정보를 **분산**하여 모든 <span style="background-color:#fff5b1">디스크</span>에 저장합니다. 이는 패리티 디스크에 대한 병목 현상을 줄여주며, 성능과 데이터 보호 간의 균형이 좋습니다. 하나의 디스크가 고장 나더라도 패리티 정보를 통해 데이터를 복구할 수 있습니다. 그러나 하나의 디스크가 고장나면 데이터 복구 시간이 걸립니다. RAID 5는 성능과 데이터 보호가 모두 중요한 애플리케이션에서 주로 사용됩니다.
+RAID 5는 데이터를 <span style="background-color:#fff5b1">**블록** 수준으로 스트라이핑</span>하고, <span style="background-color:#fff5b1">패리티</span> 정보를 **분산**하여 모든 <span style="background-color:#fff5b1">디스크</span>에 분산 저장합니다. 이러한 분산은 부하를 균형 있게 분산시켜 전용 패리티 디스크와 관련된 병목 현상을 줄여주며, 성능과 데이터 보호 간의 균형이 좋습니다. 하나의 디스크가 고장 나더라도 패리티 정보를 통해 데이터를 복구할 수 있습니다. 그러나 하나의 디스크가 고장나면 데이터 복구 시간이 걸립니다. RAID 5는 성능과 데이터 보호가 모두 중요한 애플리케이션에서 주로 사용됩니다.
 
 **RAID 6** <br>
 RAID 6은 RAID 5와 유사하지만, <span style="background-color:#fff5b1">두 개의 패리티 블록</span>을 사용하여 두 개의 디스크가 동시에 고장 나더라도 데이터를 복구할 수 있습니다. 이는 매우 높은 신뢰성을 제공합니다. 그러나 추가적인 패리티 정보로 인해 쓰기 성능이 약간 저하될 수 있습니다. RAID 6은 매우 높은 신뢰성이 요구되는 환경에서 사용됩니다. RAID 수준 5보다 좀 더 신뢰성을 강화한 수준이나, 실제 널리 사용되지 않은 수준입니다.
@@ -123,13 +123,13 @@ RAID 6은 RAID 5와 유사하지만, <span style="background-color:#fff5b1">두 
 RAID 0부터 RAID 6까지 각 레벨은 성능, 신뢰성, 저장 효율성 등의 측면에서 다양한 특성을 가지고 있습니다. 사용자의 요구에 따라 적절한 RAID 레벨을 선택하여 활용할 수 있습니다.
 
 ---
-- **RAID 0**: 성능 향상, 데이터 보호 없음.
-- **RAID 1**: 높은 신뢰성, 저장 공간 비효율적.
-- **RAID 2**: 비트 수준 스트라이핑, 해밍 코드.
-- **RAID 3**: 바이트 수준 스트라이핑, 패리티 디스크 병목.
-- **RAID 4**: 블록 수준 스트라이핑, 패리티 디스크 병목.
-- **RAID 5**: 블록 수준 스트라이핑, 분산 패리티, 성능과 보호 균형.
-- **RAID 6**: 이중 분산 패리티, 매우 높은 신뢰성.
+- **RAID 0**: Striping. 읽기 및 쓰기 성능이 향상, but 데이터 중복이 없어 하나의 디스크만 고장 나도 모든 데이터가 손실
+- **RAID 1**: Mirroring. 높은 데이터 신뢰성, but 디스크 저장 공간의 효율성이 낮아 사용 가능한 저장 공간이 절반으로 줄어듦
+- **RAID 2**: Bit-level Striping, Hamming Code ECC. 오류 검출 및 수정 가능, but 구현이 복잡하고 현재는 잘 사용되지 않음
+- **RAID 3**: Byte-level Striping with Dedicated Parity. 데이터 복구 가능, but disk arm 이동을 낭비하는 비효율성
+- **RAID 4**: Block-level Striping with Dedicated Parity. 읽기 성능이 우수, but 패리티 디스크가 병목 현상을 일으킬 수 있음
+- **RAID 5**: Block-level Striping with Distributed Parity. 균형 잡힌 성능과 신뢰성 & 단일 디스크 장애 시 데이터 복구 가능, but 구현이 복잡함
+- **RAID 6**: Block-level Striping with Double Distributed Parity. 매우 높은 신뢰성 & 두 개의 디스크 장애에도 데이터 복구 가능, but 추가된 패리티 계산으로 인해 쓰기 성능이 약간 저하될 수 있음
 {: .notice--warning}
 
 RAID의 목적과 사용 환경에 따라 적절한 RAID 레벨을 선택하는 것이 중요합니다. RAID는 데이터 보호와 성능 향상에 큰 도움이 되지만, 완벽한 데이터 보호를 위해서는 RAID와 함께 정기적인 백업도 필요합니다.
