@@ -1,14 +1,176 @@
 ---
-title: Storage Devices(2)
+title: Magnetic Disks
 date: 2024-05-20 13:09
 category: DB
-tags: [Magnetic Disks, RAID, File Organization]
-summary: In this section, we will look at computer storage devices. Because database systems store and manage data, knowledge of data storage devices is necessary to understand database systems. We will discuss the characteristics of each storage device, the characteristics of hard disks, the most common medium for storing data, RAID, and the file and record structures and buffers in computer systems. 
+tags: [Storage Devices]
+summary: Magnetic Disks are storage devices that use magnetic storage to store and retrieve digital information. In this article, we explore the key characteristics, structure, and reliability of hard disk drives (HDDs).
 toc: true
 toc_sticky: true
 ---
 
-Storage Devices(1)에서는 물리적 저장 매체의 분류와 저장 계층 구조, 자기 디스크의 특징 등을 살펴보았습니다. 이번 글에서는 이어서 자기 디스크의 <span style="background-color:#fff5b1">성능 평가</span>와 <span style="background-color:#fff5b1">향상 방법</span>에 대해 알아보고, <span style="background-color:#fff5b1">RAID</span>와 <span style="background-color:#fff5b1">File Organization</span>에 대해 살펴보겠습니다.
+# What are Magnetic Disks?
+
+하드 디스크 드라이브(HDD)는 데이터 저장을 위해 회전하는 자기 디스크와 읽기/쓰기 헤드를 사용하는 장치입니다.
+
+![Magnetic Disks]({{"assets/images/storage_devices/2.png" | relative_url}}){: .align-center width="50%"}
+
+위 이미지에서는 Magnetic Disk 내부를 추상적으로 보여주고 있습니다. 여러개의 디스크 platter가 그림과 같이 구성되어 있고, 일정한 속도로 회전합니다. read/write head가 디스크의 특정 위치(원하는 track 및 sector)에 자기적으로 데이터를 읽거나 쓸 수 있습니다.
+{: .notice}
+
+자기 디스크, 일반적으로 하드 디스크 드라이브(HDD)라고 불리는 저장 장치는, 디지털 정보를 저장하고 읽기 위해 자기 저장을 사용하는 장치입니다. HDD는 하나 이상의 빠르게 회전하는 플래터(플래터)로 구성되어 있으며, 플래터는 자기 물질로 코팅되어 있습니다.
+
+**Key Characteristics and Structure**
+
+- **Multiple Disk Platters:** 일반적으로 HDD는 하나의 spindle에 여러 개의 platter(1에서 5개)를 가지고 있습니다.
+- **Read/Write Heads:** 각 platter는 하나 또는 두 개의 읽기/쓰기 head를 가지고 있으며, 이 head는 데이터를 읽고 씁니다.
+- **Tracks and Cylinders:**
+  - 각 platter의 표면은 동심원 형태의 track으로 나뉩니다.
+  - Track은 cylinder로 그룹화됩니다. (여러 개의 platter를 가진 하드 디스크에서 동일한 track번호를 가진 track들이 모여 하나의 cylinder를 구성한다는 뜻입니다.)
+- **Sector:**
+  - 각 트랙은 sector라는 더 작은 단위로 나뉩니다.
+  - sector는 일반적으로 512바이트로, 읽기 또는 쓰기 가능한 데이터의 가장 작은 단위입니다.
+  - 일반적으로 track당 sector 수는 내부 track에서 500에서 1000, 외부 track에서는 1000에서 2000입니다.
+{: .notice--info}
+
+**Reading/Writing Data**
+
+- **Positioning:** 데이터를 읽거나 쓰기 위해 disk arm이 Read/Write Head를 올바른 트랙 위로 이동시킵니다.
+- **Rotation:** platter가 계속 회전하며, sector가 Read/Write Head 아래를 지날 때 데이터를 읽거나 씁니다.
+- **Magnetic Encoding:** Read/Write Head는 platter에 자기적으로 인코딩된 데이터를 읽거나 씁니다.
+{: .notice--info}
+
+**Reliability**
+
+- **Head-Crashes**: 초기 세대의 HDD는 헤드 크래시(Read/Write Head가 디스크 표면을 손상시키는 현상)에 취약했습니다.
+- **Improved Reliability:** 현대의 HDD는 이러한 failures에 덜 취약하지만, 개별 sector는 여전히 손상될 수 있습니다.
+{: .notice--info}
+
+# Disk Controller
+
+디스크 컨트롤러는 컴퓨터 시스템과 disk drive 하드웨어 사이의 인터페이스 역할을 합니다.
+
+![Disk Controller]({{"assets/images/storage_devices/3.png" | relative_url}}){: .align-center width="50%"}
+
+**기능**
+
+- **명령 처리:** 컴퓨터로부터 데이터를 읽거나 쓰기 위한 고수준 명령을 수락합니다.
+- **움직임 제어:** disk arm을 올바른 track으로 이동시키고 실제로 데이터를 읽거나 쓰는 작업을 수행합니다.
+- **Multiple Disk Management:** 여러 디스크를 컴퓨터 시스템에 연결합니다.
+{: .notice--info}
+
+**구성 요소**
+
+- **Microprocessor:** 디스크의 제어 논리를 처리합니다.
+- **Buffer Memory:** 데이터 전송 중에 데이터를 임시로 저장합니다.
+- **Cache:** 접근 시간을 단축시키기 위해 캐시를 포함할 수 있습니다.
+{: .notice--info}
+
+**데이터 무결성**
+
+- **Checksums:** 각 섹터에 체크섬을 추가하여 데이터 무결성을 확인합니다. 데이터가 손상되면 저장된 체크섬이 다시 계산된 체크섬과 일치하지 않습니다.
+- **Successful Writing:** 데이터를 쓴 후 sector를 다시 읽어 성공적인 쓰기를 보장합니다.
+- **Bad Sector Remapping:** 불량 sector를 재할당하여 데이터 무결성을 보장합니다.
+{: .notice--info}
+
+# 디스크 인터페이스 표준
+
+디스크 드라이브와 컴퓨터 시스템을 연결하기 위해 여러 가지 표준 인터페이스 방식이 사용되며, 각 표준은 서로 다른 기능과 속도를 제공합니다:
+
+- **SCSI (Small Computer System Interconnect)**
+- **ATA (Advanced Technology Attachment), IDE로도 알려져 있음**
+- **SATA (Serial ATA), SATA I, SATA II, SATA III**
+- **SAS (Serial Attached SCSI)**
+- **Fiber Channel**
+- **IEEE 1394 (FireWire, 주로 Apple에서 사용)**
+
+각 표준에는 여러 변형이 있으며, 서로 다른 속도와 기능을 제공합니다(각 방식은 전송속도 면에서 차이가 있습니다).
+
+# Disk Connection
+
+직접 연결 방식은 DAS, 네트워크 연결 방식은 SAN과 NAS로 구분할 수 있습니다.
+- **DAS (Direct Attached Storage):** 디스크가 컴퓨터 시스템에 직접 연결됩니다.
+- **SAN (Storage Area Network):** 고속 네트워크를 통해 다수의 디스크가 여러 서버에 연결됩니다.
+  - 디스크는 RAID를 사용하여 논리적으로 조직됩니다.
+  - SCSI, SAS, 파이버 채널 인터페이스를 사용합니다.
+- **NAS (Network Attached Storage):** 네트워크 파일 시스템 프로토콜을 사용하여 네트워크 클라이언트에 데이터를 제공하는 파일 시스템 인터페이스를 제공합니다.
+{: .notice}
+
+## SAN
+고속 네트워크를 통해 servers와 storage devices를 연결하는 특수한 네트워크입니다. SAN의 주요 목적은 컴퓨터 시스템과 저장 장치 간에 데이터를 전송하는 것입니다. (disk arrays, tape libraries 및 optical jukeboxes 같은 다양한 저장 요소를 포함할 수 있습니다)
+
+**Key Features**
+
+1. **High-Speed Network:** SAN은 고속 네트워크를 사용하여 서버와 저장 장치 간의 데이터 전송을 빠르게 합니다.
+2. **Remote Storage Connection:** SAN은 원격 저장 장치를 server에 연결하는 아키텍처를 제공하여, 저장 장치가 로컬에 연결된 것처럼(로컬 서버가 확장된 것처럼) 보이게 합니다.
+3. **Shared Disks:** SAN을 통해 multiple computing servers가 Disk를 공유할 수 있습니다.
+{: .notice}
+
+**주요 기능**
+
+- **"Any-to-Any" Connection:** SAN은 라우터, 게이트웨이, 허브 및 스위치와 같은 상호 연결 요소를 사용하여 네트워크 전체에서 모든-to-모든 연결을 허용합니다.
+- **Block-Level Operations:** SAN은 "file" abstraction을 제공하지 않고 block-level operation만 제공합니다.
+- **비용 및 복잡성 감소:** 2000년대 후반에 SAN의 비용과 복잡성이 감소하여 더 널리 채택되었습니다.
+{: .notice}
+
+**SAN과 관련된 기술**
+
+- **RAID (Redundant Array of Independent Disks):** 데이터를 여러 디스크에 분산 저장하여 신뢰성과 성능을 높입니다.
+- **SCSI (Small Computer System Interface):** 서버와 저장 장치 간의 통신을 위한 표준 인터페이스입니다.
+- **Fiber Channel:** 고속 데이터 전송을 위해 SAN에서 널리 사용되는 기술입니다.
+{: .notice}
+
+## NAS
+네트워크에 연결된 파일 수준의 데이터 저장 장치로, 이기종 네트워크 클라이언트 간에 데이터를 제공하는 시스템입니다. 
+
+**Key Features**
+
+1. **파일 수준 저장:** NAS는 파일 시스템 인터페이스를 통해 데이터를 제공합니다.
+2. **네트워크 연결:** NAS는 네트워크를 통해 여러 클라이언트가 데이터를 접근하고 공유할 수 있게 합니다.
+{: .notice}
+
+**주요 기능**
+
+- **네트워크를 통한 데이터 공유:** NAS는 네트워크를 통해 다양한 클라이언트가 데이터를 접근할 수 있도록 하여 파일 공유를 쉽게 합니다.
+- **파일 기반 프로토콜 사용:** NAS는 NFS, SMB/CIFS, AFP, AFS 등의 파일 기반 프로토콜을 사용하여 데이터를 전송합니다.
+{: .notice}
+
+**파일 기반 프로토콜**
+
+- **NFS (Network File System):** UNIX 시스템에서 많이 사용됨.
+- **SMB/CIFS (Server Message Block/Common Internet File System):** MS Windows에서 많이 사용됨.
+- **AFP (Apple Filing Protocol):** Apple Macintosh 컴퓨터에서 사용됨.
+- **AFS (Andrew File System):** Carnegie Mellon University에서 개발된 파일 시스템.
+{: .notice}
+
+## NAS vs. DAS vs. SAN
+
+| 항목                        | DAS (직접 연결 스토리지)                | SAN (스토리지 영역 네트워크)                | NAS (네트워크 연결 스토리지)           |
+|-----------------------------|-----------------------------------------|-------------------------------------------|-----------------------------------------|
+| **연결 방식**               | 단일 서버에 직접 연결                   | 고속 네트워크를 통해 여러 서버와 스토리지 장치를 연결 | 네트워크에 연결되어 여러 클라이언트에서 접근 가능 |
+| **Data Access Level**        | Block-level                              | Block-level                                  | File-level                                |
+| **Scalability**                  | Limited, 서버에 직접 드라이브를 추가해야 함 | Highly scalable, 네트워크에 장치 추가 가능      | Moderately scalable, 네트워크에 NAS 장치 추가 가능 |
+| **Performance**                    | 단일 서버 접근 시 높은 성능              | 매우 높은 성능, 기업 환경에 적합              | 좋은 성능, 파일 공유 및 백업에 적합        |
+| **비용**                    | 초기 비용 낮음, 확장성 제한적            | 비용 높음, 대기업에 적합                     | 보통의 비용, 중소기업에 적합              |
+| **Use Case**               | 단일 서버의 로컬 스토리지                | 대규모 기업 스토리지, 데이터 센터             | 파일 공유, 백업, 중소기업의 미디어 저장   |
+| **프로토콜**                | SCSI, SAS, SATA                        | Fibre Channel, iSCSI, FCoE                | NFS, SMB/CIFS, AFP, FTP                  |
+| **관리 복잡성**             | 단순, 서버에서 관리                     | 복잡, 전용 관리 및 구성 필요                 | 보통의 관리 복잡성, 내장 인터페이스로 관리 용이 |
+| **Data Sharing**             | 연결된 서버에 제한됨                    | 여러 서버가 공유 스토리지 접근 가능            | 다양한 네트워크 클라이언트에서 쉽게 공유 가능 |
+| **Backup and Recovery**            | 일반적으로 로컬 백업만 가능              | 고급 백업 및 복구 옵션, 높은 가용성       | 좋은 백업 옵션, 스냅샷 기능          |
+| **중복성 및 장애 조치**      | 제한적, 서버 기능에 의존                 | 높은 중복성 및 장애 조치 기능                 | 보통, 일부 NAS 장치는 중복성 및 장애 조치 제공 |
+
+**추가 설명**
+
+![Storage Devices]({{"assets/images/storage_devices/4.png" | relative_url}}){: .align-center width="50%"}
+
+- **NAS**: 네트워크를 통해 여러 클라이언트와 서버가 파일 수준에서 데이터를 공유할 수 있도록 하는 저장 장치입니다. NAS는 파일 기반 프로토콜을 사용하여 데이터를 네트워크 패킷으로 전송합니다. 
+- **DAS**: 단일 서버에 직접 연결된 저장 장치로, 다른 네트워크 장치와 공유되지 않습니다.
+- **SAN**: 고속 네트워크를 통해 여러 서버가 블록 수준에서 데이터를 공유하고 관리할 수 있도록 하는 시스템입니다. SAN은 블록 기반 프로토콜을 사용하여 데이터를 전송합니다. 
+{: .notice}
+
+
+**SAN-NAS 하이브리드**
+- NAS와 SAN의 장점을 모두 제공하여, 파일 수준 프로토콜(NAS)과 블록 수준 프로토콜(SAN)을 동시에 지원하는 시스템입니다
+{: .notice}
 
 # 디스크 성능 평가
 
@@ -86,114 +248,3 @@ Performance Measures of Disks는 다음과 같은 세 가지 측정 항목으로
   - 특별한 하드웨어(NV-RAM)가 필요하지 않습니다.
   - **저널링 파일 시스템**: 로그 디스크를 지원하며, 성능 향상을 위해 디스크 쓰기를 재정렬합니다.
 {: .notice}
-
-# RAID
-
-RAID(Redundant Array of Independent Disks, 독립 디스크의 중복 배열)는 여러 개의 하드 드라이브를 하나의 논리적인 유닛으로 결합하여 데이터 저장의 성능, 안정성, 또는 용량을 향상시키는 기술입니다. RAID는 데이터를 여러 디스크에 분산시켜 시스템의 신뢰성과 성능을 높이는 것을 목표로 합니다.
-
-RAID에는 여러 가지 레벨이 있으며, 각각 성능, 신뢰성, 저장 효율성 등의 측면에서 다양한 특성을 갖고 있습니다. RAID 0, 1, 2, 3, 4, 5, 6을 설명하면 다음과 같습니다:
-
----
-**RAID 0** <br>
-RAID 0은 데이터를 여러 **디스크에 분산하여 저장함으로써 성능을 극대화**하는 방식입니다. 이를 데이터 <span style="background-color:#fff5b1">스트라이핑(Data Striping)</span>이라고 하며, 데이터가 각 디스크에 순차적으로 나누어져 저장되기 때문에 읽기 및 쓰기 속도가 매우 빠릅니다. 
-그러나 RAID 0에는 데이터 보호 기능이 전혀 없어서, 하나의 디스크라도 고장 나면 모든 데이터가 손실됩니다. 따라서 RAID 0은 주로 성능이 중요한 애플리케이션에서 사용되며, 데이터 손실 위험을 감수할 수 있는 경우에 적합합니다.
-
-**RAID 1** <br>
-RAID 1은 <span style="background-color:#fff5b1">미러링(Mirroring)</span> 방식을 사용하여 **데이터를 두 개 이상의 디스크에 동일하게 복제**합니다. 모든 쓰기 작업은 두 디스크에 동일하게 수행되며, 읽기 작업은 어느 디스크에서든 가능합니다. 이로 인해 하나의 디스크가 고장 나더라도 다른 디스크에서 데이터를 복구할 수 있어 높은 신뢰성을 제공합니다. 그러나 저장 공간의 효율성이 낮아서, 사용 가능한 저장 공간이 절반으로 줄어들게 됩니다. RAID 1은 데이터 보호가 중요한 애플리케이션에 주로 사용됩니다.
-
-**RAID 2** <br>
-RAID 2는 <span style="background-color:#fff5b1">**비트** 수준 스트라이핑(Bit-Level Striping)</span>과 <span style="background-color:#fff5b1">해밍 코드(Hamming Code)</span>를 사용하여 오류를 검출하고 수정합니다. 각 바이트의 **비트**를 여러 디스크에 나누어 저장하고, 오류 검출 및 수정용 해밍 코드를 추가하여 신뢰성을 높입니다. 
-RAID 2는 RAID 0과 RAID 1에 비해 데이터 오류 검출 및 수정 기능을 통해 데이터 신뢰성을 크게 향상시킨 기술입니다. RAID 2는 데이터를 비트 수준으로 여러 디스크에 스트라이핑하고, 각 디스크에 오류 검출 및 수정을 위한 해밍 코드를 추가로 저장합니다.
-> 예를 들어, 8개의 디스크가 있는 경우, 각 바이트의 비트를 8개의 디스크에 분산 저장하고, 별도의 디스크에 해밍 코드를 저장합니다. 이 방식은 **데이터 전송 속도를 높이면서도 데이터의 무결성을 유지할 수 있습니다.**
-
-RAID 2는 이론적으로 오류 검출과 수정 기능을 제공하지만, 구현이 복잡하고 비용이 많이 들기 때문에 현재는 거의 사용되지 않습니다. 초기 RAID 시스템에서 사용되었으나, 다른 RAID 레벨로 대체되었습니다.
-
-**RAID 3** <br>
-RAID 3은 <span style="background-color:#fff5b1">**바이트** 수준 스트라이핑(Byte-Level Striping)</span>과 별도의 <span style="background-color:#fff5b1">패리티 디스크</span>를 사용하여 데이터를 보호합니다. 데이터가 **바이트** 단위로 여러 디스크에 스트라이핑되며, 패리티 정보는 전용 디스크에 저장됩니다. 이 방식은 높은 데이터 전송 속도를 제공하지만, 패리티 디스크가 병목 현상을 일으킬 수 있습니다. RAID 3는 연속 데이터 전송이 중요한 애플리케이션에서 주로 사용됩니다.
-
-**RAID 4** <br>
-RAID 4는 <span style="background-color:#fff5b1">**블록** 수준 스트라이핑(Block-Level Striping)</span>과 별도의 <span style="background-color:#fff5b1">패리티 디스크</span>를 사용합니다. 데이터가 블록 단위로 여러 디스크에 스트라이핑되며, 패리티 정보는 전용 디스크에 저장됩니다. RAID 4는 RAID 3보다 더 일반적인 I/O 작업에 적합하지만, 패리티 디스크가 병목 현상을 일으킬 수 있다는 단점이 있습니다. 데이터 읽기와 쓰기가 균형 있게 중요한 애플리케이션에서 사용됩니다.
-
-**RAID 5** <br>
-RAID 5는 데이터를 <span style="background-color:#fff5b1">**블록** 수준으로 스트라이핑</span>하고, <span style="background-color:#fff5b1">패리티</span> 정보를 **분산**하여 모든 <span style="background-color:#fff5b1">디스크</span>에 분산 저장합니다. 이러한 분산은 부하를 균형 있게 분산시켜 전용 패리티 디스크와 관련된 병목 현상을 줄여주며, 성능과 데이터 보호 간의 균형이 좋습니다. 하나의 디스크가 고장 나더라도 패리티 정보를 통해 데이터를 복구할 수 있습니다. 그러나 하나의 디스크가 고장나면 데이터 복구 시간이 걸립니다. RAID 5는 성능과 데이터 보호가 모두 중요한 애플리케이션에서 주로 사용됩니다.
-
-**RAID 6** <br>
-RAID 6은 RAID 5와 유사하지만, <span style="background-color:#fff5b1">두 개의 패리티 블록</span>을 사용하여 두 개의 디스크가 동시에 고장 나더라도 데이터를 복구할 수 있습니다. 이는 매우 높은 신뢰성을 제공합니다. 그러나 추가적인 패리티 정보로 인해 쓰기 성능이 약간 저하될 수 있습니다. RAID 6은 매우 높은 신뢰성이 요구되는 환경에서 사용됩니다. RAID 수준 5보다 좀 더 신뢰성을 강화한 수준이나, 실제 널리 사용되지 않은 수준입니다.
-
-RAID 0부터 RAID 6까지 각 레벨은 성능, 신뢰성, 저장 효율성 등의 측면에서 다양한 특성을 가지고 있습니다. 사용자의 요구에 따라 적절한 RAID 레벨을 선택하여 활용할 수 있습니다.
-
----
-- **RAID 0**: Striping. 읽기 및 쓰기 성능이 향상, but 데이터 중복이 없어 하나의 디스크만 고장 나도 모든 데이터가 손실
-- **RAID 1**: Mirroring. 높은 데이터 신뢰성, but 디스크 저장 공간의 효율성이 낮아 사용 가능한 저장 공간이 절반으로 줄어듦
-- **RAID 2**: Bit-level Striping, Hamming Code ECC. 오류 검출 및 수정 가능, but 구현이 복잡하고 현재는 잘 사용되지 않음
-- **RAID 3**: Byte-level Striping with Dedicated Parity. 데이터 복구 가능, but disk arm 이동을 낭비하는 비효율성
-- **RAID 4**: Block-level Striping with Dedicated Parity. 읽기 성능이 우수, but 패리티 디스크가 병목 현상을 일으킬 수 있음
-- **RAID 5**: Block-level Striping with Distributed Parity. 균형 잡힌 성능과 신뢰성 & 단일 디스크 장애 시 데이터 복구 가능, but 구현이 복잡함
-- **RAID 6**: Block-level Striping with Double Distributed Parity. 매우 높은 신뢰성 & 두 개의 디스크 장애에도 데이터 복구 가능, but 추가된 패리티 계산으로 인해 쓰기 성능이 약간 저하될 수 있음
-{: .notice--warning}
-
-RAID의 목적과 사용 환경에 따라 적절한 RAID 레벨을 선택하는 것이 중요합니다. RAID는 데이터 보호와 성능 향상에 큰 도움이 되지만, 완벽한 데이터 보호를 위해서는 RAID와 함께 정기적인 백업도 필요합니다.
-
-## Choice of RAID Levels
-RAID 레벨을 선택할 때는 여러 가지 요소를 고려해야 합니다. 
-가장 중요한 요소는 
-- 금전적 비용, 
-- 성능, 
-- 고장 발생 시의 성능, 
-- 고장 디스크 복구 시의 성능입니다. 
-이러한 요소들은 각각의 RAID 레벨이 제공하는 특징 및 장단점에 따라 달라집니다.
-
-<span style="background-color:#b3cf1f">RAID 0</span>은 데이터 스트라이핑을 통해 성능을 극대화하지만, **데이터 보호 기능이 전혀 없습니다.** 따라서 데이터 안전이 중요하지 않은 경우에만 사용됩니다. RAID 0은 주로 성능이 중요한 애플리케이션에서 사용되며, 데이터 손실 위험을 감수할 수 있는 경우에 적합합니다.
-
-<span style="background-color:#b3cf1f">RAID 1</span>은 데이터를 두 개 이상의 디스크에 동일하게 복제하여 저장하는 미러링 방식을 사용합니다. 이는 높은 신뢰성을 제공하며, 디스크 중 하나가 고장 나더라도 다른 디스크에서 데이터를 복구할 수 있습니다. 그러나 RAID 1은 저장 공간의 효율성이 낮아서 **사용 가능한 저장 공간이 절반**으로 줄어들게 됩니다. RAID 1은 데이터 보호가 중요한 애플리케이션에서 주로 사용됩니다. 또한 RAID 1은 쓰기 성능이 RAID 5보다 훨씬 좋기 때문에, 높은 업데이트 빈도가 있는 환경 (예: 로그 디스크)에서 선호됩니다.
-
-<span style="background-color:#b3cf1f">RAID 2와 RAID 4</span>는 각각 RAID 3과 RAID 5로 대체되어 **거의 사용되지 않습니다.** RAID 2는 비트 수준 스트라이핑과 해밍 코드를 사용하여 오류를 검출하고 수정하지만, **구현이 복잡**하고 **비용**이 많이 듭니다. RAID 4는 블록 수준 스트라이핑과 패리티 디스크를 사용하지만, 패리티 디스크가 병목 현상을 일으킬 수 있습니다.
-
-<span style="background-color:#b3cf1f">RAID 3</span>은 바이트 수준 스트라이핑과 패리티 디스크를 사용하여 데이터를 보호하지만, 비트 스트라이핑이 단일 블록 읽기를 위해 모든 디스크 접근을 강요하여 **disk arm 이동을 낭비**합니다. 이로 인해 RAID 3은 **비효율적**이어서 현재는 거의 사용되지 않습니다. 대신 블록 스트라이핑을 사용하는 RAID 5가 이러한 문제를 피하고 더 널리 사용됩니다.
-
-<span style="background-color:#b3cf1f">RAID 5</span>는 데이터를 블록 수준으로 스트라이핑하고, 패리티 정보를 분산하여 모든 디스크에 저장합니다. 이는 패리티 디스크에 대한 병목 현상을 줄여주며, **성능과 데이터 보호 간의 균형**이 좋습니다. RAID 5는 낮은 업데이트 빈도와 대량의 데이터가 있는 애플리케이션에 적합합니다. 대규모 저장소를 더 저렴하게 구성할 수 있다는 장점이 있습니다.
-
-<span style="background-color:#b3cf1f">RAID 6</span>은 RAID 5와 유사하지만, 두 개의 패리티 블록을 사용하여 두 개의 디스크가 동시에 고장 나더라도 데이터를 복구할 수 있습니다. 이는 매우 높은 신뢰성을 제공하지만, 추**가적인 패리티 정보로 인해 쓰기 성능이 약간 저하**될 수 있습니다. RAID 6은 매우 높은 신뢰성이 요구되는 환경에서 사용되지만, 대부분의 애플리케이션에서는 RAID 1 또는 RAID 5가 충분한 안전성을 제공하기 때문에 잘 사용되지 않습니다.
-
-결론적으로, RAID 레벨을 선택할 때는 <span style="background-color:#fff5b1">애플리케이션의 요구 사항과 데이터 보호, 성능, 비용 효율성</span> 등을 종합적으로 고려해야 합니다. 
-
-RAID 0은 성능이 중요한 경우, 
-RAID 1은 데이터 보호가 중요한 경우, 
-RAID 5는 성능과 데이터 보호의 균형이 중요한 경우, 
-RAID 6은 매우 높은 신뢰성이 필요한 경우에 적합합니다. 
-RAID 2와 RAID 4는 거의 사용되지 않으며, RAID 3도 비효율성 때문에 사용되지 않습니다.
-{: .notice}
-
-## Software RAID vs. Hardware RAID
-**소프트웨어 RAID**는 RAID 구현이 전적으로 소프트웨어에서 이루어지며, 특별한 하드웨어 지원이 필요 없습니다. 이는 운영 체제 수준에서 구현되며, 비용이 적게 들지만 CPU와 메모리를 많이 사용하게 되어 시스템 성능에 영향을 미칠 수 있습니다.
-
-반면, **하드웨어 RAID**는 특별한 하드웨어를 통해 RAID를 구현합니다.
-하드웨어 RAID는 비휘발성 메모리(NV-RAM)를 사용하여 실행 중인 쓰기 작업을 기록합니다. 전원 장애가 발생하면, 데이터 손상이 일어날 수 있습니다. 
-> 예를 들어, 미러링 시스템에서 한 블록을 쓰고 두 번째 블록을 쓰기 전에 전원 장애가 발생하면, 이러한 손상된 데이터는 전원이 복구될 때 검출되어야 합니다. NV-RAM은 잠재적으로 손상된 블록을 효율적으로 검출하는 데 도움을 줍니다. (그렇지 않으면 모든 디스크 블록을 읽고 미러/패리티 블록과 비교해야 합니다)
-
-## Hardware RAID Issues
-하드웨어 RAID에서 발생할 수 있는 주요 이슈는 다음과 같습니다.
-
-**Latent failure (bit rot)**
-- 데이터가 시간이 지나면서 손상되는 현상으로, 이전에 성공적으로 기록된 데이터가 손상될 수 있습니다.
-- 디스크 중 하나만 고장 나도 데이터 손실이 발생할 수 있습니다.
-
----
-이를 해결하기 위한 기능들은 다음과 같습니다:
-1. **Data scrubbing**:
-    - 지속적으로 잠재적 실패를 스캔하고, 복사본이나 패리티 데이터를 통해 복구합니다.
-    - 이는 데이터를 주기적으로 확인하고 오류를 수정하는 과정입니다.
-
-2. **Hot swapping**:
-    - 시스템이 작동 중일 때 전원을 끄지 않고 디스크를 교체하는 기능입니다.
-    - 일부 하드웨어 RAID 시스템에서 지원하며, 복구 시간을 줄이고 시스템 가용성을 크게 향상시킵니다.
-
-3. **Hot spare**:
-    - 많은 시스템이 예비 디스크를 온라인 상태로 유지하며, 디스크 고장 시 이를 즉시 교체합니다.
-    - 이를 핫 스페어라고 하며, 고장난 디스크를 자동으로 대체하여 데이터 보호를 강화합니다.
-
-4. **단일 장애 지점 방지**:
-    - 많은 RAID 시스템은 시스템의 작동을 중단시키지 않도록 단일 장애 지점을 방지합니다.
-    - 이를 위해 배터리 백업이 있는 중복 전원 공급 장치, 다중 컨트롤러 및 다중 인터커넥션을 사용합니다.
-{: .notice}
-하드웨어 RAID는 데이터 손상 가능성을 줄이고, 복구 시간을 단축하며, 시스템의 가용성을 높이기 위해 여러 가지 방법을 사용합니다.
